@@ -94,9 +94,7 @@ void decryptFile(String keywd) async {
   final iv = encrypt.IV.fromUtf8('usjighrsthnjoird');
   String encryptedData = await file.readAsString();
   if(encryptedData.isEmpty){return;}
-  print(encryptedData);
   final encrypter = encrypt.Encrypter(encrypt.AES(key));
   final decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase16(encryptedData), iv: iv);
-  print(decrypted);
   await file.writeAsString(decrypted);
 }

@@ -31,7 +31,6 @@ class _PasswordManagerState extends State<PasswordManager> {
     inputKeyword += 's'; // SALTING the keyword
     }
     keyword = inputKeyword;
-    print(keyword);
     inputKeyword= sha256Hash(inputKeyword); //sha256Hash is written in prop.dart
     if(correctPassword==''){
       final Directory directory = await getApplicationDocumentsDirectory();
@@ -47,7 +46,6 @@ class _PasswordManagerState extends State<PasswordManager> {
     if (await checkHash(keyword)){
       decryptFile(keyword);
       accounts = await readWordsFromFile();
-      print(accounts);
       encryptFile(keyword);
       setState(() {
         _currentPage = 1;
