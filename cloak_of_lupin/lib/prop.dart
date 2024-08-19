@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:crypto/crypto.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:flutter/services.dart' show rootBundle;
 class Passls{
   String? domain;
   String? usernm;
@@ -11,10 +14,10 @@ String sha256Hash(String input) {
   var digest = sha256.convert(bytes);
   return digest.toString();
 }
-String hash = sha256Hash(keywd);
+//String hash = sha256Hash(keywd);
 
 //READING FILE INTO LIST
-import 'package:flutter/services.dart' show rootBundle;
+//import 'package:flutter/services.dart' show rootBundle;
 
 Future<List<String>> readWordsFromFile() async {
   try {
@@ -45,12 +48,12 @@ void someFunction() async {
   List<String> words = ['Hello', 'world', 'this', 'is', 'Flutter'];
   await writeWordsToFile(words);
 }
-    someFunction();
+    //someFunction();
 
 
 //ENCRYPT
-import 'dart:io';
-import 'package:encrypt/encrypt.dart' as encrypt; // Use the same alias
+//import 'dart:io';
+ // Use the same alias
 
 void okbro() async {
    final filePath = 'example/file.txt';
@@ -65,17 +68,17 @@ void okbro() async {
 }
 
 //DECRYPT
-import 'dart:io';
-import 'package:encrypt/encrypt.dart' as encrypt; // Use the same alias
+//import 'dart:io';
+//import 'package:encrypt/encrypt.dart' as encrypt; // Use the same alias
 
-void okbro() async {
-  final filePath = 'example/file.txt';
-  final key = encrypt.Key.fromUtf8('asdkinghtyuhfgdtagnuh123!@#ratsj');
-  final iv = encrypt.IV.fromUtf8('usjighrsthnjoird');
-  final encryptedData = File(filePath).readAsStringSync();
-  final encrypter = encrypt.Encrypter(encrypt.AES(key));
-  final decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase16(encryptedData), iv: iv);
+//void okbro() async {
+  //final filePath = 'example/file.txt';
+  //final key = encrypt.Key.fromUtf8('asdkinghtyuhfgdtagnuh123!@#ratsj');
+//  final iv = encrypt.IV.fromUtf8('usjighrsthnjoird');
+  //final encryptedData = File(filePath).readAsStringSync();
+  //final encrypter = encrypt.Encrypter(encrypt.AES(key));
+  //final decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase16(encryptedData), iv: iv);
 
-  File(filePath).writeAsStringSync(decrypted);
-  print('File decrypted and saved.');
-}
+//  File(filePath).writeAsStringSync(decrypted);
+  //print('File decrypted and saved.');
+//}
