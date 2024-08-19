@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'prop.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 void main() {
   runApp(MyApp());
 }
@@ -22,22 +24,35 @@ class _PasswordManagerState extends State<PasswordManager> {
   int _currentPage = 0;
   String keyword = '';
   String errorMessage = '';
-  List<List<String>> accounts = [
-    ["google", "xebra@gmail.com", "Xebra23"],
-    ["github", "git@cool.com", "code123"],
-  ];
-
-  
-  bool checkHash(String inputKeyword) {
-    const String correctPassword = 'yellow'; 
+  List<String> accounts =[];
+  Future<bool> checkHash(String inputKeyword) async{
+    String correctPassword = await readFromFile(); //readFromFile is written in prop.dart
+    while (inputKeyword.length < 32) {
+    inputKeyword += 's'; // SALTING the keyword
+    }
+    keyword = inputKeyword;
+    print(keyword);
+    inputKeyword= sha256Hash(inputKeyword); //sha256Hash is written in prop.dart
+    if(correctPassword==''){
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}\\${'keywd.txt'}';
+      final file = File(filePath);
+      await file.writeAsString(inputKeyword);
+      return true;
+    }
     return inputKeyword == correctPassword;
   }
 
-  void _submitKeyword() {
-    if (checkHash(keyword)) {
+  Future<void> _submitKeyword() async{
+    if (await checkHash(keyword)){
+      decryptFile(keyword);
+      accounts = await readWordsFromFile();
+      print(accounts);
+      encryptFile(keyword);
       setState(() {
         _currentPage = 1;
       });
+
     } else {
       setState(() {
         errorMessage = 'Incorrect password. Please try again.';
@@ -68,7 +83,9 @@ class _PasswordManagerState extends State<PasswordManager> {
   void _addAccount(String domain, String username, String password) {
     if (domain.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
       setState(() {
-        accounts.add([domain, username, password]);
+        accounts.addAll([domain, username, password]);
+        writeWordsToFile(accounts);
+        encryptFile(keyword);
         _currentPage = 1;
       });
     } else {
@@ -99,7 +116,7 @@ class _PasswordManagerState extends State<PasswordManager> {
     switch (page) {
       case 0:
         return _buildKeywordPage();
-      case 1:
+      case 1: 
         return _buildAccountsPage();
       case 2:
         return _buildAddAccountPage();
@@ -165,14 +182,14 @@ class _PasswordManagerState extends State<PasswordManager> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: accounts.length,
+              itemCount: (accounts.length/3).floor(),
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text('Domain: ${accounts[index][0]}'),
-                  subtitle: Text('Username: ${accounts[index][1]}'),
+                  title: Text('Domain: ${accounts[index*3]}'),
+                  subtitle: Text('Username: ${accounts[(index*3)+1]}'),
                   trailing: ElevatedButton(
                     onPressed: () {
-                      _showPassword(context, accounts[index][2]);
+                      _showPassword(context, accounts[(index*3)+2]);
                     },
                     child: Text('See Password'),
                   ),

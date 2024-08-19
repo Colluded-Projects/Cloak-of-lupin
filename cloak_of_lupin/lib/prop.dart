@@ -2,83 +2,101 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:flutter/services.dart' show rootBundle;
-class Passls{
-  String? domain;
-  String? usernm;
-  String? passwd;
-}
+import 'package:path_provider/path_provider.dart';
+
+
 //CREATING HASH
 String sha256Hash(String input) {
   var bytes = utf8.encode(input);
   var digest = sha256.convert(bytes);
   return digest.toString();
-}
-//String hash = sha256Hash(keywd);
+}//UASAGE: String hash = sha256Hash(keywd);
 
+
+//READING A FILE INTO A STR VAR
+//IMPORT needed for the following function import 'package:flutter/services.dart' show rootBundle;
+Future<String> readFromFile() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}\\${'keywd.txt'}');
+    // Check if the file already exists
+    if (!(await file.exists())) {
+      await file.create();
+      return '';
+    }
+    String fileContent = await file.readAsString();
+    //String fileContent = await rootBundle.loadString('${directory.path}\\${'keywd.txt'}');
+    return fileContent;
+}
 //READING FILE INTO LIST
-//import 'package:flutter/services.dart' show rootBundle;
+//IMPORT for the following: import 'package:flutter/services.dart' show rootBundle;
 
 Future<List<String>> readWordsFromFile() async {
-  try {
-    // Load the file from assets
-    String fileContent = await rootBundle.loadString('example/file.txt');
+  await Future.delayed(Duration(seconds: 1));
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}${Platform.pathSeparator}info.txt');
+    final fileStat = await file.stat();
+  if (fileStat.size == 0) {
+    return [];
+  }
+    String fileContent = await file.readAsString();
     // Split the content by spaces
     List<String> words = fileContent.split(' ');
-    return words; // Return the list of words
-  } catch (e) {
-    print("Error reading file: $e");
-    return []; // Return an empty list in case of error
-  }
+    return words;
 }
 
+
 //WRITING INTO FILE, ERASING CONTENT AND WRITTING
+//IMPORT for the following function: import 'dart:io';
 Future<void> writeWordsToFile(List<String> words) async {
-  final filePath = 'example/file.txt'; // Specify the file name
+  final Directory directory = await getApplicationDocumentsDirectory();
+  final filePath = '${directory.path}\\${'info.txt'}'; // Specify the file name
 
   // Create the file
   final file = File(filePath);
 
   // Write the words to the file, joining them with spaces
   await file.writeAsString(words.join(' '));
-
-  print('Words written to $filePath');
 }
-void someFunction() async {
-  List<String> words = ['Hello', 'world', 'this', 'is', 'Flutter'];
-  await writeWordsToFile(words);
-}
-    //someFunction();
 
 
 //ENCRYPT
-//import 'dart:io';
- // Use the same alias
+//IMPORT for the following function: import 'dart:io';
 
-void okbro() async {
-   final filePath = 'example/file.txt';
-  final key = encrypt.Key.fromUtf8('asdkinghtyuhfgdtagnuh123!@#ratsj');
-  final iv = encrypt.IV.fromLength(16);
-  final plaintext = File(filePath).readAsStringSync();
-  final encrypter = encrypt.Encrypter(encrypt.AES(key));
-  final encrypted = encrypter.encrypt(plaintext, iv: iv);
+  void encryptFile(String keywd) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}\\${'info.txt'}';
+    final key = encrypt.Key.fromUtf8(keywd);
+    final iv = encrypt.IV.fromUtf8('usjighrsthnjoird');
+    final File file = File(filePath);
+    String plaintext = await file.readAsString();
+    if(plaintext.isEmpty){return;}
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    final encrypted = encrypter.encrypt( plaintext, iv: iv);
 
-  File(filePath).writeAsStringSync(encrypted.base16);
-  print('File encrypted and saved.');
-}
+    await file.writeAsString(encrypted.base16);
+  }
 
 //DECRYPT
+//IMPORT for following function:
 //import 'dart:io';
-//import 'package:encrypt/encrypt.dart' as encrypt; // Use the same alias
+//import 'package:encrypt/encrypt.dart' as encrypt;
 
-//void okbro() async {
-  //final filePath = 'example/file.txt';
-  //final key = encrypt.Key.fromUtf8('asdkinghtyuhfgdtagnuh123!@#ratsj');
-//  final iv = encrypt.IV.fromUtf8('usjighrsthnjoird');
-  //final encryptedData = File(filePath).readAsStringSync();
-  //final encrypter = encrypt.Encrypter(encrypt.AES(key));
-  //final decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase16(encryptedData), iv: iv);
+void decryptFile(String keywd) async {
+  final Directory directory = await getApplicationDocumentsDirectory();
+  final File file = File('${directory.path}\\${'info.txt'}');
 
-//  File(filePath).writeAsStringSync(decrypted);
-  //print('File decrypted and saved.');
-//}
+    // Check if the file already exists
+    if (!(await file.exists())) {
+      await file.create();
+      return;
+    }
+  final key = encrypt.Key.fromUtf8(keywd);
+  final iv = encrypt.IV.fromUtf8('usjighrsthnjoird');
+  String encryptedData = await file.readAsString();
+  if(encryptedData.isEmpty){return;}
+  print(encryptedData);
+  final encrypter = encrypt.Encrypter(encrypt.AES(key));
+  final decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase16(encryptedData), iv: iv);
+  print(decrypted);
+  await file.writeAsString(decrypted);
+}
