@@ -13,13 +13,13 @@ The GUI will open.
 - Flutter version 3 or above.
 - Visual Studio with "Desktop Development with c++" workload for running in windows.
 - The following dependencies in pubspec.yaml
-''' 
+```
 dependencies:
   crypto: ^3.0.2
   encrypt: ^5.0.0
   path_provider: ^2.0.11
 #Keep the indentation in mind 
-'''
+```
 
 ## Features-
 - Keyword is salted.
