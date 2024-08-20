@@ -2,7 +2,8 @@
 A password manager application in Flutter. It stores data with AES crypt and encrypts keyword with salting and hashing so that one cannot figure out the keyword.
 
 ## Installation-
-Download the latest release and unzip it.
+Download the latest release and unzip it. 
+To add your own initialization vector, edit _readWordsFromFile()_ and _writeWordsToFile()_ functions in _prop.dart_. 
 Run using 
 ``` Dart 
 flutter run
