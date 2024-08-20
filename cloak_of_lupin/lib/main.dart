@@ -25,16 +25,16 @@ class _PasswordManagerState extends State<PasswordManager> {
   String keyword = '';
   String errorMessage = '';
   List<String> accounts =[];
-  Future<bool> checkHash(String inputKeyword) async{
-    String correctPassword = await readFromFile(); //readFromFile is written in prop.dart
+  Future<bool> checkHash(String inputKeyword) async{//checks if the entered keyword is correct or not 
+    String correctPassword = await readFromFile(); 
     while (inputKeyword.length < 32) {
     inputKeyword += 's'; // SALTING the keyword
     }
     keyword = inputKeyword;
-    inputKeyword= sha256Hash(inputKeyword); //sha256Hash is written in prop.dart
+    inputKeyword= sha256Hash(inputKeyword);
     if(correctPassword==''){
       final Directory directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}\\${'keywd.txt'}';
+      final filePath = '${directory.path}${Platform.pathSeparator}colkeywd.txt';
       final file = File(filePath);
       await file.writeAsString(inputKeyword);
       return true;
@@ -44,9 +44,7 @@ class _PasswordManagerState extends State<PasswordManager> {
 
   Future<void> _submitKeyword() async{
     if (await checkHash(keyword)){
-      decryptFile(keyword);
-      accounts = await readWordsFromFile();
-      encryptFile(keyword);
+      accounts = await readWordsFromFile(keyword);
       setState(() {
         _currentPage = 1;
       });
@@ -82,8 +80,7 @@ class _PasswordManagerState extends State<PasswordManager> {
     if (domain.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
       setState(() {
         accounts.addAll([domain, username, password]);
-        writeWordsToFile(accounts);
-        encryptFile(keyword);
+        writeWordsToFile(accounts, keyword);
         _currentPage = 1;
       });
     } else {
@@ -123,7 +120,7 @@ class _PasswordManagerState extends State<PasswordManager> {
     }
   }
 
-  Widget _buildKeywordPage() {
+  Widget _buildKeywordPage() { //FIRST screen
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
@@ -173,7 +170,7 @@ class _PasswordManagerState extends State<PasswordManager> {
     );
   }
 
-  Widget _buildAccountsPage() {
+  Widget _buildAccountsPage() {//SECOND screen, once the keyword is approved
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -204,7 +201,7 @@ class _PasswordManagerState extends State<PasswordManager> {
     );
   }
 
-  Widget _buildAddAccountPage() {
+  Widget _buildAddAccountPage() { //Add accounts screen, where you add new accounts
     final TextEditingController domainController = TextEditingController();
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
