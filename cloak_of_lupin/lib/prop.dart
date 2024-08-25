@@ -4,7 +4,6 @@ import 'package:crypto/crypto.dart';//for hashing
 import 'package:encrypt/encrypt.dart' as encrypt; //for AES encryption
 import 'package:path_provider/path_provider.dart'; // for reading and writing functions(check below)
 
-
 //CREATING HASH
 String sha256Hash(String input) {
   var bytes = utf8.encode(input);
