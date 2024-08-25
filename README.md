@@ -1,5 +1,5 @@
 # Cloak of Lupin-
-A password manager application in Flutter. It stores data with AES crypt and encrypts keyword with salting and hashing so that one cannot figure out the keyword.
+A password manager application in Flutter. It stores data with AES crypt and encrypts keyword with salting and hashing so no one can figure out the keyword.
 
 ## Installation-
 Download the latest release and unzip it. 
@@ -19,6 +19,8 @@ dependencies:
   crypto: ^3.0.2
   encrypt: ^5.0.0
   path_provider: ^2.0.11
+  cupertino_icons: ^1.0.6
+  url_launcher: ^6.3.0
 #Keep the indentation in mind 
 ```
 
