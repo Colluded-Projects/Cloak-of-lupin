@@ -200,6 +200,13 @@ class _PasswordManagerState extends State<PasswordManager> {
   ),
 child: ListView(
 children: [
+UserAccountsDrawerHeader(
+accountName: Text('san'),
+accountEmail: Text('san@msrit.edu'),
+currentAccountPicture: CircleAvatar(
+child: Text('SN'),
+),
+),
 ListTile(
 leading: Icon(Icons.arrow_back),
 title: Text('Return to Accounts'),
