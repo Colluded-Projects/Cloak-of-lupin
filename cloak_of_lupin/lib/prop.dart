@@ -3,7 +3,7 @@ import 'dart:io'; // reading and writing functions(check below)
 import 'package:crypto/crypto.dart';//for hashing
 import 'package:encrypt/encrypt.dart' as encrypt; //for AES encryption
 import 'package:path_provider/path_provider.dart'; // for reading and writing functions(check below)
-
+import 'dart:math';
 //CREATING HASH
 String sha256Hash(String input) {
   var bytes = utf8.encode(input);
@@ -63,4 +63,20 @@ Future<void> writeWordsToFile(List<String> words, String keywd) async {
   final encrypted = encrypter.encrypt( nonEncrypted, iv: iv);
 
   await file.writeAsString(encrypted.base16);
+}
+
+String randomPass(){
+  String randch = 'ABCDEFGHIJKLMNOPQRSVWXYZabcdefghjlnopqrstuvwxyz1234567890!@#\$%^&*()<>[]{}';
+  List a=[];
+  for(int i= 0; i<16 ; i++){
+    int randomint = Random().nextInt(randch.length);
+    a.add(randch[randomint]);
+  }
+  return a.join('');
+}
+bool isValidDomain(String domain) {
+    final RegExp domainRegex = RegExp(
+      r'^(?!-)[A-Za-z0-9-]{1,63}(?<!-)\.(?!-)[A-Za-z0-9-]{1,63}(?<!-)$',
+    );
+    return domainRegex.hasMatch(domain);
 }

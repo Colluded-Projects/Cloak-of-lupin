@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 
 
 void main() {
@@ -74,6 +75,19 @@ class _PasswordManagerState extends State<PasswordManager> {
           backgroundColor: Color.fromARGB(252, 227, 219, 196),
           content: Text(password),
           actions: [
+           TextButton(
+              onPressed:(){
+                Clipboard.setData(ClipboardData(text: password)).then((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Copied to clipboard'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                });
+              },
+              child: Icon(Icons.copy)
+            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -343,8 +357,21 @@ onTap: () {
     });
     },
   ),
-        title: Text('Add new account'),
-        backgroundColor: Color.fromARGB(255, 240, 228, 215),
+    title: Text('Add new account'),
+    backgroundColor: Color.fromARGB(255, 240, 228, 215),
+    actions: [  IconButton(    
+      icon: Icon(Icons.key),    
+      onPressed: () {
+        String randPass = randomPass();
+        Clipboard.setData(ClipboardData(text: randPass)).then((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Random Password copied to clipboard: $randPass\nClick again to generate new one.'),
+                      duration: Duration(seconds: 4),
+                    ),
+                  );
+                });
+          },  ),],
       ),      
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -376,11 +403,18 @@ onTap: () {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
+              String domain = domainController.text;
+              if (!isValidDomain(domain)){
+                domainController.clear();
+                ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Invalid domain. Please try again.')),
+              );
+              } else {
               _addAccount(
                 domainController.text,
                 usernameController.text,
                 passwordController.text,
-              );
+              );}
             },
             style: ElevatedButton.styleFrom(
                backgroundColor: Color.fromARGB(255, 240, 228, 215),// Text color
@@ -416,7 +450,7 @@ onTap: () {
          
          Padding(
           padding: const EdgeInsets.all(100.0), 
-          child: Text("There are few pre-requisites terms you need to know.\nPre-requisites terms: Encryption, Decryption, AES crypt, Salting<of password>\n\nWhen you open the app for the first time, the keyword you enter will be salted, hashed and stored. So, the next time you enter, it verifies the hash of the keyword you enter with the saved hash and give you the access.\n\nWhen you add another account to the app, it will use AES crypt and encrypt the data and store it in a file in the apps document directory. AES crypt requires a keyword and an initialization vector. The keyword is the one you entered(with salting) and the IV is pre-defined in the code which can be changed.\n\n\nThus your account details are safely encrypted and decrypted!", 
+          child: Text("There are few pre-requisites terms you need to know.\nPre-requisites terms: Encryption, Decryption, AES crypt, Salting<of password>\n\nWhen you open the app for the first time, the keyword you enter will be salted, hashed and stored. So, the next time you enter, it verifies the hash of the keyword you enter with the saved hash and gives you the access.\n\nWhen you add another account to the app, it will use AES crypt, encrypt the data and store it in a file in the apps document directory. AES crypt requires a keyword and an initialization vector(IV). The keyword is the one you entered(with salting) and the IV is pre-defined in the code which can be changed.\n\n\nThus your account details are safely encrypted and decrypted!", 
           style: TextStyle(fontSize:18 ),),
           ),
         ],
@@ -454,7 +488,7 @@ onTap: () {
             style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () async{
-                        launchUrl(Uri.parse('https://github.com/Colluded-Projects/Cloak-of-lupin/pulls')); // Replace with your GitHub URL
+                        launchUrl(Uri.parse('https://github.com/Colluded-Projects/Cloak-of-lupin/pulls'));
                       },)
          ], ), ),),
         ],
