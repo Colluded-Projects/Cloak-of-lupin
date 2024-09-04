@@ -293,7 +293,9 @@ onTap: () {
           style: ElevatedButton.styleFrom(
                backgroundColor:  Color.fromARGB(249, 233, 228, 215),// Text color
               ),
-          child: Text('See Password'),
+          child: Icon(
+Icons.visibility,//eye icon
+color:Colors.black,//color to the icon
         ),
         IconButton(
     icon: Icon(Icons.close_sharp),
