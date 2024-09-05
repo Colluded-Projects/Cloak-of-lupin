@@ -7,15 +7,14 @@ import 'dart:math';
 //CREATING HASH
 String sha256Hash(String input) {
   var bytes = utf8.encode(input);
-  var digest = sha256.convert(bytes);
+  var digest = sha256.convert(bytes); 
   return digest.toString();
 }//UASAGE: String hash = sha256Hash(keywd);
 
-
 //READING A FILE INTO A STR VAR
-Future<String> readFromFile() async {
+Future<String> readFromFile(String email) async {
     final Directory directory = await getApplicationDocumentsDirectory();
-    final File file = File('${directory.path}${Platform.pathSeparator}colkeywd.txt');
+    final File file = File('${directory.path}${Platform.pathSeparator}${email}_colkeywd.txt');
     // Check if the file already exists
     if (!(await file.exists())) {
       await file.create();
@@ -25,9 +24,9 @@ Future<String> readFromFile() async {
     return fileContent;
 }
 //READING FILE INTO LIST
-Future<List<String>> readWordsFromFile(String keywd) async {
+Future<List<String>> readWordsFromFile( String email,String keywd) async {
     final Directory directory = await getApplicationDocumentsDirectory();
-    final File file = File('${directory.path}${Platform.pathSeparator}colinfo.txt');
+    final File file = File('${directory.path}${Platform.pathSeparator}${email}_colinfo.txt');
     if (!(await file.exists())) {
       await file.create();
       return [];
@@ -49,9 +48,9 @@ Future<List<String>> readWordsFromFile(String keywd) async {
 
 
 //WRITING INTO FILE, ERASING CONTENT AND WRITTING
-Future<void> writeWordsToFile(List<String> words, String keywd) async {
+Future<void> writeWordsToFile(List<String> words,String email ,String keywd) async {
   final Directory directory = await getApplicationDocumentsDirectory();
-  final filePath = '${directory.path}${Platform.pathSeparator}colinfo.txt'; // Specify the file name
+  final filePath = '${directory.path}${Platform.pathSeparator}${email}_colinfo.txt'; // Specify the file name
 
   // Create the file
   final file = File(filePath);
