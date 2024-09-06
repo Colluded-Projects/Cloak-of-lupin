@@ -561,36 +561,4 @@ onTap: () {
       ),),
     );
   }
-  Widget _changeK() { //how it runs page
-    return Padding(
-      padding: const EdgeInsets.all(0.0),
-      child: Scaffold(
-      appBar: AppBar(
-      leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    onPressed: () {
-      //Navigate to the other screen
-      setState(() {
-        Navigator.of(context).pop(); 
-      //_currentPage = 1; 
-    });
-    },
-  ),
-        title: Text('Change keyword?'),
-        backgroundColor: Color.fromARGB(255, 240, 228, 215),
-      ),      
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        
-        children: [
-         
-         Padding(
-          padding: const EdgeInsets.all(100.0), 
-          child: Text("There are few pre-requisites terms you need to know.\nPre-requisites terms: Encryption, Decryption, AES crypt, Salting<of password>\n\nWhen you open the app for the first time, the keyword you enter will be salted, hashed and stored. So, the next time you enter, it verifies the hash of the keyword you enter with the saved hash and gives you the access.\n\nWhen you add another account to the app, it will use AES crypt, encrypt the data and store it in a file in the apps document directory. AES crypt requires a keyword and an initialization vector(IV). The keyword is the one you entered(with salting) and the IV is pre-defined in the code which can be changed.\n\n\nThus your account details are safely encrypted and decrypted!", 
-          style: TextStyle(fontSize:18 ),),
-          ),
-        ],
-      ),),
-    );
-  }
 }

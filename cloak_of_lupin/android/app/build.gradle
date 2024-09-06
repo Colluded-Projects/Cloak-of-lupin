@@ -4,6 +4,11 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.8.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.0"
+    // Other dependencies...
+}
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")

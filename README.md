@@ -2,37 +2,32 @@
 A password manager application in Flutter. It stores data with AES crypt and encrypts keyword with salting and hashing so no one can figure out the keyword.
 
 ## Installation-
-Download the latest release and unzip it. 
-To add your own initialization vector, edit _readWordsFromFile()_ and _writeWordsToFile()_ functions in _prop.dart_. 
-Run using 
-``` Dart 
-flutter run
-```
-The GUI will open.
+Download the .AppImage or .apk from the release section and run it.
+The GUI will open instantly or after Installation.
 
 ## Dependencies-
-- Flutter version 3 or above.
-- Visual Studio with "Desktop Development with c++" workload for running in windows.
-- The following dependencies in pubspec.yaml
+curl, git, unzip, xz-utils, zip, libglu1-mesa, clang, cmake, ninja-build, pkg-config, libgtk-3-dev, libstdc++-12-dev
 ```
-dependencies:
-  crypto: ^3.0.2
-  encrypt: ^5.0.0
-  path_provider: ^2.0.11
-  cupertino_icons: ^1.0.6
-  url_launcher: ^6.3.0
-#Keep the indentation in mind 
+sudo apt-get update -y && sudo apt-get upgrade -y;
+sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa
+sudo apt-get install \
+      clang cmake git \
+      ninja-build pkg-config \
+      libgtk-3-dev liblzma-dev \
+      libstdc++-12-dev
 ```
 
 ## Features-
+- Supports multiple users.
 - Keyword is salted.
 - Decrypted data is not saved anywhere during runtime.
-- AES encryption standard.
+- AES encryption standard is used.
 - has a GUI.
+- has a built in Password Generator
 
 ## Credits- 
-- @ChrompyCoder and @chandinivasana  
-- Mukti, an open source community from RIT, Bengaluru.
+- @ChrompyCoder, @chandinivasana and @Deepikat11
+- Mukti, an open source community, in Bengaluru.
 
 ## Contributions-
 Want to contribute? Create a [Pull request](https://github.com/Colluded-Projects/Cloak-of-lupin/pulls).
