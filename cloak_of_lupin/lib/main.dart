@@ -38,7 +38,7 @@ class _PasswordManagerState extends State<PasswordManager> {
   String errorMessage = '';
   List<String> accounts =[];
   Future<bool> checkHash(String inputEmail , String inputKeyword) async{//checks if the entered keyword is correct or not 
-    String correctPassword = await readFromFile(inputKeyword);
+    String correctPassword = await readFromFile(inputEmail);
     while (inputKeyword.length < 32) {
     inputKeyword += 's'; // SALTING the keyword
     }
@@ -216,7 +216,11 @@ class _PasswordManagerState extends State<PasswordManager> {
                   border: OutlineInputBorder(),
                   labelText: 'Keyword',
                 ),
-               
+               onChanged: (value) {
+                  setState(() {
+                    email = value;
+                  });
+                }, 
               ),
             ),
             SizedBox(height: 20),
