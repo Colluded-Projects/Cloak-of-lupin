@@ -30,5 +30,6 @@ sudo apt-get install \
 - Mukti, an open source community, in Bengaluru.
 
 ## Contributions-
+You can create a AppImage of this application and release it.
 Want to contribute? Create a [Pull request](https://github.com/Colluded-Projects/Cloak-of-lupin/pulls).
 Want to request a feature or report a issue personally? Feel free to contact [Mukti on telegram.](https://t.me/+JYx6akEWSik2Yjc1)

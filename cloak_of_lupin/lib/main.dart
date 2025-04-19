@@ -34,7 +34,6 @@ class _PasswordManagerState extends State<PasswordManager> {
   int _currentPage = 0;
   String keyword = '';
   String email = '';
-  String name='';
   String errorMessage = '';
   List<String> accounts =[];
   Future<bool> checkHash(String inputEmail , String inputKeyword) async{//checks if the entered keyword is correct or not 
@@ -54,8 +53,26 @@ class _PasswordManagerState extends State<PasswordManager> {
     return inputKeyword == correctPassword;
   }
 
-  Future<void> _submitKeyword() async{
-    if (await checkHash(email,keyword)){
+  void _submitKeyword(int i) async{
+    errorMessage = "";
+    if(i ==1 && !await filexist(email)){
+      setState(() {
+        errorMessage = 'Incorrect email or password. Please try again.';
+      });
+      return;
+    }
+    if(i ==0 && await filexist(email)){
+      setState(() {
+        errorMessage = 'Account with email exist. Please choose a different email and try again.';
+      });
+      return;
+    }
+    if(email == ""){
+      setState(() {
+        errorMessage = 'Email feild cannot be empty. Please try again.';
+      });
+    }
+    else if (await checkHash(email,keyword)){
       accounts = await readWordsFromFile(email,keyword);
       setState(() {
         _currentPage = 1;
@@ -63,9 +80,21 @@ class _PasswordManagerState extends State<PasswordManager> {
 
     } else {
       setState(() {
-        errorMessage = 'Incorrect password. Please try again.';
+        errorMessage = 'Incorrect email or password. Please try again.';
       });
     }
+  }
+
+  Future<void> _signup() async{
+      setState(() {
+        _currentPage = 3;
+      });
+  }
+
+  Future<void> _backlogin() async{
+      setState(() {
+        _currentPage = 0;
+      });
   }
 
   void _showPassword(BuildContext context, String password) {
@@ -143,6 +172,8 @@ class _PasswordManagerState extends State<PasswordManager> {
         return _buildAccountsPage();
       case 2:
         return _buildAddAccountPage();
+      case 3:
+        return _buildsignupPage();
       default:
         return _buildKeywordPage();
     }
@@ -154,35 +185,13 @@ class _PasswordManagerState extends State<PasswordManager> {
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          
           children: [
-            Text(
-            'Enter your name',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: const Color.fromARGB(255, 125, 65, 136),
-            ),
-          ),
-          SizedBox(height: 20),
-          Container(
-            width: 300,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Name',
-              ),
-              onChanged: (value) {
-                  setState(() {
-                    name = value;
-                  });
-                },
-            ),
-          ),
           SizedBox(height: 20),
             Text(
-              'Enter your email',
+              'Enter Your Email',
               style: TextStyle(
-                fontSize: 36,
+                fontSize: 35,
                 fontWeight: FontWeight.bold,
                 color: const Color.fromARGB(255, 125, 65, 136),
               ),
@@ -193,7 +202,7 @@ class _PasswordManagerState extends State<PasswordManager> {
               child: TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Email',
+                  labelText: 'Login Email',
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -204,9 +213,9 @@ class _PasswordManagerState extends State<PasswordManager> {
             ),
             SizedBox(height: 20),
             Text(
-              'Enter the Keyword',
+              'Enter The Keyword',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: const Color.fromARGB(255, 125, 65, 136),
               ),
@@ -218,7 +227,7 @@ class _PasswordManagerState extends State<PasswordManager> {
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Keyword',
+                  labelText: 'Login Keyword',
                 ),
                onChanged: (value) {
                   setState(() {
@@ -229,11 +238,13 @@ class _PasswordManagerState extends State<PasswordManager> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _submitKeyword,
+              onPressed: ()  {
+              _submitKeyword(1);
+              },
               style: ElevatedButton.styleFrom(
                backgroundColor: Color.fromARGB(255, 240, 228, 215),// Text color
               ),
-              child: Text('Submit'),
+              child: Text('Login'),
             ),
             if (errorMessage.isNotEmpty)
               Padding(
@@ -243,11 +254,107 @@ class _PasswordManagerState extends State<PasswordManager> {
                   style: TextStyle(color: Colors.red),
                 ),
               ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _signup,
+              style: ElevatedButton.styleFrom(
+               backgroundColor: Color.fromARGB(255, 240, 228, 215),// Text color
+              ),
+              child: Text('Sign Up'),
+            ),
           ],
         ),
       ),
     );
   }
+
+   Widget _buildsignupPage() { //SIGN UP PAGE
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          SizedBox(height: 20),
+            Text(
+              'Enter Your Email',
+              style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 125, 65, 136),
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: 300,
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'New Email',
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    email = value;
+                  });
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Enter The Keyword',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 125, 65, 136),
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              width: 300,
+              child: TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'New Keyword',
+                ),
+               onChanged: (value) {
+                  setState(() {
+                    keyword = value;
+                  });
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed:(){ _submitKeyword(0);},
+              style: ElevatedButton.styleFrom(
+               backgroundColor: Color.fromARGB(255, 240, 228, 215),// Text color
+              ),
+              child: Text('Sign Up'),
+            ),
+            if (errorMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+              SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _backlogin,
+              style: ElevatedButton.styleFrom(
+               backgroundColor: Color.fromARGB(255, 240, 228, 215),// Text color
+              ),
+              child: Text('Back to login page'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 
   Widget _buildAccountsPage() {//SECOND screen, once the keyword is approved
     return Drawer(
@@ -265,7 +372,7 @@ class _PasswordManagerState extends State<PasswordManager> {
 child: ListView(
 children: [
 UserAccountsDrawerHeader(
-accountName: Text(name),
+accountName: Text(''),
 accountEmail: Text(email),
 currentAccountPicture: CircleAvatar(
 child: Icon(
@@ -318,6 +425,40 @@ onTap: () {
               _currentPage = 0;
             });
             Navigator.of(context).pop(); // Close the drawer
+},
+),
+ListTile(
+leading: Icon(Icons.delete),
+title: Text('Delete Account!'),
+onTap: () {
+            // Show the dialog when the button is pressed
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Delete Account'),
+                  backgroundColor: Color.fromARGB(255, 240, 228, 215),
+                  content: Text('Do you want to delete the account details?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        // Dismiss the dialog when the button is pressed
+                        setState(() {
+                        DeleteAccount(email);
+                        accounts = [];
+                        email="";
+                        _currentPage = 0;
+                        Navigator.of(context).pop(); 
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+               backgroundColor: Color.fromARGB(255, 240, 228, 215),// Text color
+              ),
+                      child: Text('Delete'),
+                    ),
+                  ],
+                );
+              },);
 },
 ),
 ],

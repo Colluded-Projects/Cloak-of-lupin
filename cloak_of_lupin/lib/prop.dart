@@ -1,4 +1,5 @@
 import 'dart:convert';//for hashing
+import 'dart:ffi';
 import 'dart:io'; // reading and writing functions(check below)
 import 'package:crypto/crypto.dart';//for hashing
 import 'package:encrypt/encrypt.dart' as encrypt; //for AES encryption
@@ -23,6 +24,33 @@ Future<String> readFromFile(String email) async {
     String fileContent = await file.readAsString();
     return fileContent;
 }
+//Delete account 
+Future<void> DeleteAccount(String email) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}${Platform.pathSeparator}${email}_colkeywd.txt');
+    final File file2 = File('${directory.path}${Platform.pathSeparator}${email}_colinfo.txt');
+
+    // Check if the file already exists
+    if (await file.exists()) {
+      await file.delete();
+    }
+    if (await file2.exists()) {
+      await file2.delete();
+    }
+}
+//Check if file already exists 
+Future<bool> filexist(String email) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}${Platform.pathSeparator}${email}_colkeywd.txt');
+    final File file2 = File('${directory.path}${Platform.pathSeparator}${email}_colinfo.txt');
+
+    // Check if the file already exists
+    if (await file.exists() && await file2.exists()) {
+      return true;
+    }
+    return false;
+}
+
 //READING FILE INTO LIST
 Future<List<String>> readWordsFromFile( String email,String keywd) async {
     final Directory directory = await getApplicationDocumentsDirectory();
